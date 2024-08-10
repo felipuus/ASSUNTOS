@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Itens</title>
+    <title>Suporte</title>
+    <style>
+        /* Define o cursor para pointer (mãozinha) quando o mouse estiver sobre um item da lista */
+        #item-list li {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>ASSUNTOS SUPORTE</h1>
@@ -21,14 +27,30 @@
             itemList.innerHTML = '';
             filteredItems.forEach(item => {
                 const li = document.createElement('li');
-                li.textContent = item;
+                li.textContent = `${item.codigo} - ${item.descricao}`;
+
+                // Adiciona o evento de clique para copiar apenas o código
+                li.addEventListener('click', () => {
+                    copyToClipboard(item.codigo);
+                    alert(`Código copiado: ${item.codigo}`);
+                });
+
                 itemList.appendChild(li);
             });
         }
 
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+
         searchInput.addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const filteredItems = items.filter(item => item.toLowerCase().includes(searchTerm));
+            const filteredItems = items.filter(item => item.descricao.toLowerCase().includes(searchTerm));
             renderList(filteredItems);
         });
 
@@ -42,8 +64,10 @@
             items = lines.map(line => {
                 const columns = line.split(';');
                 console.log('Columns:', columns); // Log as colunas para depuração
-                return columns[1] ? columns[1].trim() : ''; // Extraia e limpe a descrição
-            }).filter(descricao => descricao); // Remove linhas vazias
+                const codigo = columns[0] ? columns[0].trim() : '';
+                const descricao = columns[1] ? columns[1].trim() : '';
+                return codigo && descricao ? { codigo, descricao } : null; // Cria objeto com código e descrição
+            }).filter(item => item !== null); // Remove itens nulos
             renderList(items);
         }
 
