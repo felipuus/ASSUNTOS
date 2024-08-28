@@ -141,7 +141,7 @@
             return new TextDecoder().decode(bytes); // Decodifica com UTF-8
         }
 
-        fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://drive.google.com/uc?export=download&id=1p_E7ixVbvJXluipqj_v5h1vFusY_zf1Y'))
+        fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://drive.google.com/uc?export=download&id=1NzkWXsngAGS7_-ephhaugT3C1reghRpy'))
             .then(response => response.json())
             .then(data => {
                 const decodedCSV = decodeBase64(data.contents);
